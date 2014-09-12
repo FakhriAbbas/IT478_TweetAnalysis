@@ -36,7 +36,6 @@ def processUsers(user_list):
                 gender = setGender()
                 cur.execute('insert into users values (?,?)', (user, gender))
                 for tweet in tweets:
-                    gender = setGender()
                     row = (user, tweet['text'], str('0'), tweet['retweet_count'], tweet['id_str'] )
                     cur.execute('insert into tweets values (?, ?, ?, ?, ?)', row)
         conn.commit()
