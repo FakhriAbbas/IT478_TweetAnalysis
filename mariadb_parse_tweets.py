@@ -10,13 +10,13 @@ conn = mysql.connector.connect(user='lucas', password='ohjustpoutthen',
 
 tables = {}
 
-tables['users'] = ("create table users (user_id bigint not null primary key, gender char(1), age datetime, zipcode int(5), city varchar(45))")
+tables['users'] = ("create table users (idUser bigint not null primary key, gender char(1) not null, age datetime not null, zipcode int(5) not null, city varchar(45) not null)")
 
-tables['tweets'] = ("create table tweets (user_id bigint not null, tweet_text varchar(165), date_tweeted datetime, retweet_count smallint, tweet_id bigint not null primary key, sentimentScore double, constraint fk_tweets_user foreign key (user_id) references users (user_id))")
+tables['tweets'] = ("create table tweets (idUser bigint not null, tweetText varchar(140) not null, tweetDate datetime not null, retweetCount smallint not null, idTweet bigint not null primary key, sentimentScore double not null, constraint fk_tweets_user foreign key (idUser) references users (idUser))")
 
-tables['sentiment_staging_users'] = ("create table sentiment_staging_users (staging_user_id bigint not null primary key, gender char(1), age datetime, zipcode int(5), city varchar(45), status varchar(45))")
+tables['sentiment_staging_users'] = ("create table sentiment_staging_users (idUser bigint not null primary key, gender char(1) not null, age datetime not null, zipcode int(5) not null, city varchar(45) not null, status varchar(45) null)")
 
-tables['sentiment_staging_tweets'] = ("create table sentiment_staging_tweets (staging_user_id bigint not null, tweet_text varchar(165), date_tweeted datetime, retweet_count smallint, tweet_id bigint not null primary key, sentimentScore double, status varchar(45), constraint fk_tweets_staging_user foreign key (staging_user_id) references sentiment_staging_users (staging_user_id))")
+tables['sentiment_staging_tweets'] = ("create table sentiment_staging_tweets (Sentiment_Staging_User_idUser bigint not null, tweetText varchar(140) not null, tweetDate datetime not null, retweetCount smallint not null, idTweet bigint not null primary key, sentimentScore double null, status varchar(45) null, constraint fk_tweets_staging_user foreign key (Sentiment_Staging_User_idUser) references sentiment_staging_users (idUser))")
 
 cursor = conn.cursor()
 
@@ -31,6 +31,9 @@ for name, ddl in tables.items():
             print(err.msg)
     else:
         print("OK")
+
+cursor.execute('create index fk_Tweets_User_idx on tweets (idUser asc)')
+cursor.execute('create index fk_Sentiment_Staging_Tweets_Sentiment_Staging_User1_idx on sentiment_staging_tweets (Sentiment_Staging_User_idUser asc)')
 
 def getUserIDs(path):
     user_list = os.listdir(path)
@@ -76,10 +79,10 @@ def processUsers(user_list):
                 gender = setGender()
                 rzip = setZip()
                 age = setAge()
-                cursor.execute('insert into users (user_id, gender, age, zipcode, city) values (%s,%s,%s,%s,%s)', (user, gender, age, rzip[0], rzip[1]))
+                cursor.execute('insert into sentiment_staging_users (idUser, gender, age, zipcode, city) values (%s,%s,%s,%s,%s)', (user, gender, age, rzip[0], rzip[1]))
                 for tweet in tweets:
                     row = (user, tweet['text'], str('0'), tweet['retweet_count'], tweet['id_str'] )
-                    cursor.execute('insert into tweets (user_id, tweet_text, date_tweeted, retweet_count, tweet_id) values (%s, %s, %s, %s, %s)', row)
+                    cursor.execute('insert into sentiment_staging_tweets (Sentiment_Staging_User_idUser, tweetText, tweetDate, retweetCount, idTweet) values (%s, %s, %s, %s, %s)', row)
         conn.commit()
 
 userlist = getUserIDs('collected_tweets')
