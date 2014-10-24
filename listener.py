@@ -26,12 +26,9 @@ class SListener(StreamListener):
             return false
 
     def on_status(self, status):
-        # Open a file with today's date and append to it any new tweets
-        # Hopefully, this will automatically handle changing the file that is
-        # written every day after 00:00
-        with open('data/'+date.today().isoformat()+'.json','a') as day_tweets:
-            day_tweets.write(status)
-            print(status)
+        # TODO: use mysql connector to write to staging db
+        # Probably ought to be a seperate file and here is when we pass the
+        # tweet to the function
         return
 
     # Write to the error log or deleted tweets log when necessary
