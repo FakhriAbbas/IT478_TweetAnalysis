@@ -81,8 +81,8 @@ def processUsers(user_list):
                 age = setAge()
                 cursor.execute('insert into sentiment_staging_users (idUser, gender, age, zipcode, city) values (%s,%s,%s,%s,%s)', (user, gender, age, rzip[0], rzip[1]))
                 for tweet in tweets:
-                    row = (user, tweet['text'], str('0'), tweet['retweet_count'], tweet['id_str'] )
-                    cursor.execute('insert into sentiment_staging_tweets (Sentiment_Staging_User_idUser, tweetText, tweetDate, retweetCount, idTweet) values (%s, %s, %s, %s, %s)', row)
+                    row = (user, tweet['text'], str('0'), tweet['retweet_count'], tweet['id_str'], 'LOADED' )
+                    cursor.execute('insert into sentiment_staging_tweets (Sentiment_Staging_User_idUser, tweetText, tweetDate, retweetCount, idTweet, status) values (%s, %s, %s, %s, %s)', row)
         conn.commit()
 
 userlist = getUserIDs('collected_tweets')
