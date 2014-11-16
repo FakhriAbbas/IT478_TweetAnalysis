@@ -85,7 +85,7 @@ class Tweet:
         
         month = random.choice(months)
         year = orig[5]
-        day = random.randrange(0,28)
+        day = str(random.randrange(0,28))
         time = orig[3]
 
         return year+'-'+month+'-'+day+' '+time
