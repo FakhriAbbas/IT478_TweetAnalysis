@@ -94,7 +94,7 @@ class Tweet:
         return self.date
 
     def setRetweetCount(self):
-        return tweets_json['retweet_count']
+        return tweet_json['retweet_count']
     
     def getRetweetCount(self):
         return self.retweet_count
