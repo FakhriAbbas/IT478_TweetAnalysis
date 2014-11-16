@@ -45,7 +45,7 @@ def main():
     users = [User(user) for user in files]
 
     for user in users:
-        cursor.execute('insert into sentiment_staging_users (idUser, age, gender, zipcode, city) values (%s,%s,%s,%s,%s)', (user.buildDbRow())
+        cursor.execute('insert into sentiment_staging_users (idUser, age, gender, zipcode, city) values (%s,%s,%s,%s,%s)', (user.buildDbRow()))
 
     for user in users:
         with open('collected_tweets/'+user.user_id, 'r') as user_file:
