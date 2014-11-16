@@ -17,7 +17,7 @@ class User:
         self.gender = self.setGender()
         self.age = self.setAge()
         self.zipcode = self.setZipcode()
-        self.city = self.getCity()
+        self.city = self.setCity()
 
     def setGender(self):
         return random.choice("MF")
