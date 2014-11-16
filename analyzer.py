@@ -58,7 +58,7 @@ def main():
                 try:
                     cursor.execute('insert into sentiment_staging_tweets (Sentiment_Staging_User_idUser, tweetText, tweetDate, retweetCount, idTweet, status) values (%s, %s, %s, %s, %s, %s)', row)
                 except:
-                    f.write("Error at: " + row)
+                    f.write("Error at: " + str(row))
         conn.commit()
 
     conn.close()
