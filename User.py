@@ -35,7 +35,7 @@ class User:
         return self.age
 
     def setZipcode(self):
-        randzip = random.choice(list(zips.keys()))
+        randzip = random.choice(list(self.zips.keys()))
         return randzip
 
     def setCity(self):
