@@ -53,6 +53,7 @@ def main():
             tweets = [Tweet(tweet) for tweet in tweets_json]
             for tweet in tweets:
                 cursor.execute('insert into sentiment_staging_tweets (Sentiment_Staging_User_idUser, tweetText, tweetDate, retweetCount, idTweet, status) values (%s, %s, %s, %s, %s, %s)', tweet.buildDbRow())
-        
-        conn.close()
+        conn.commit()
+
+    conn.close()
 main()
