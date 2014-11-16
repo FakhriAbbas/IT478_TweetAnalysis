@@ -43,6 +43,7 @@ def main():
     db.makeTables(cursor)
 
     users = [User(user) for user in files]
+
     for user in users:
         cursor.execute('insert into sentiment_staging_users (idUser, age, gender, zipcode, city) values (%s,%s,%s,%s,%s)', (user.buildDbRow())
 
