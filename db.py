@@ -9,8 +9,8 @@ sentiment_staging_users = "create table if not exists sentiment_staging_users (i
 
 sentiment_staging_tweets = "create table if not exists sentiment_staging_tweets (Sentiment_Staging_User_idUser bigint not null, tweetText varchar(140) not null, tweetDate datetime not null, retweetCount smallint not null, idTweet bigint not null primary key, sentimentScore double null, status varchar(45) null, constraint fk_tweets_staging_user foreign key (Sentiment_Staging_User_idUser) references sentiment_staging_users (idUser))"
 
-user_index = "create index fk_Tweets_User_idx on tweets (idUser asc)"
-staging_user_index = "create index fk_Sentiment_Staging_Tweets_Sentiment_Staging_User1_idx on sentiment_staging_tweets (Sentiment_Staging_User_idUser asc)"
+user_index = "create index if not exits fk_Tweets_User_idx on tweets (idUser asc)"
+staging_user_index = "create index if not exists fk_Sentiment_Staging_Tweets_Sentiment_Staging_User1_idx on sentiment_staging_tweets (Sentiment_Staging_User_idUser asc)"
 
 def makeConnection():
     conn = mysql.connector.connect(user='it478', password='tweets', host='localhost', database='it478')
