@@ -96,35 +96,6 @@ class Tweet:
     def getDate(self):
         return self.date
 
-    def setGender(self):
-        self.gender = random.choice("MF")
-
-    def getGender(self):
-        return self.gender
-
-    def setAge(self):
-        month = str(random.randint(1, 12))
-        day = str(random.randint(1, 28))
-        year = str(random.randint(1979, 1996))
-        self.birthday = year+'-'+month+'-'+day
-
-    def getAge(self):
-        return self.birthday
-
-    def setZipcode(self):
-        zips = {    '61701':'Bloomington',
-                    '61702':'Bloomington',
-                    '61704':'Bloomington',
-                    '61705':'Bloomington',
-                    '61709':'Bloomington',
-                    '61710':'Bloomington',
-                    '61791':'Bloomington',
-                    '61799':'Bloomington',
-                    '61761':'Normal',
-                    '61790':'Normal'        }
-        randzip = choice(list(zips.keys()))
-        self.zipcode = randzip
-
     def buildDbRow(self):
        self.db_row = (self.user_id, self.text, self.date, self.retweet_count, self.tweet_id, self.candidate_retweet, self.source_tweet_id)
        return self.db_row
