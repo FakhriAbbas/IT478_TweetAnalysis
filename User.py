@@ -48,4 +48,4 @@ class User:
         return self.zipcode
 
     def buildDbRow(self):
-        return (self.user_id, self.age, self.gender, self.zipcode)
+        return (self.user_id, self.age, self.gender, self.zipcode, self.city)
