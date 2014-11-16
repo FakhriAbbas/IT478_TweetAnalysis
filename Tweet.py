@@ -1,26 +1,17 @@
 import re
+import random
 
 class Tweet:
-    candidates = [  'tomcottonAR','PryorForSenate',
-                    'MarkUdall','CoryGardner',
-                    'joniernst','TeamBraley',
-                    'Team_Mitch','AlisonForKY',
-                    'BillCassidy','MaryLandrieu',
-                    'ThomTillis','kayhagan' ]
-
     def __init__(self, tweet_json):
         self.tweet_json = tweet_json
         self.text = ""
         self.user_id = ""
         self.tweet_id = ""
         self.date = ""
-        self.candidate_retweet = 0
-        self.original_tweet = ""
-        self.retweet_count = 0
-        self.user_mentions = []
-        self.hashtags = []
         self.db_row = ""
-        self.source_tweet_id = ""
+        self.gender = ""
+        self.age  ""
+        self.zipcode = 0
      
     def getJson(self):
         return self.tweet_json
@@ -80,24 +71,24 @@ class Tweet:
         return self.tweet_id
     
     def setDate(self):
-        months = {  "Jan":"01",
-                    "Feb":"02",
-                    "Mar":"03",
-                    "Apr":"04",
-                    "May":"05",
-                    "Jun":"06",
-                    "Jul":"07",
-                    "Aug":"08",
-                    "Sep":"09",
-                    "Oct":"10",
-                    "Nov":"11",
-                    "Dec":"12" }
+        months =  [ "01"
+                ,   "02"
+                ,   "03"
+                ,   "04"
+                ,   "05"
+                ,   "06"
+                ,   "07"
+                ,   "08"
+                ,   "09"
+                ,   "10"
+                ,   "11"
+                ,   "12" ]
 
         orig = self.tweet_json['created_at'].split(' ')
         
-        month = months[orig[1]]
+        month = random.choice(months)
         year = orig[5]
-        day = orig[2]
+        day = random.randrange(0,28)
         time = orig[3]
 
         self.date = year+'-'+month+'-'+day+' '+time
@@ -105,56 +96,35 @@ class Tweet:
     def getDate(self):
         return self.date
 
-    def setOriginalTweet(self):
-        try:
-            self.original_tweet = tweet_json['retweeted_status']['id_str']
-        except KeyError:
-            self.original_tweet = ""
-            
-    
-    def setCandidateRetweet(self):
-        discard = 0
-        try:
-            if self.tweet_json['retweeted_status']['user']['screen_name'] in self.candidates:
-                discard = 1
-        except KeyError:
-            # KeyError because it wasn't a retweet
-            pass
+    def setGender(self):
+        self.gender = random.choice("MF")
 
-        self.candidate_retweet = discard
+    def getGender(self):
+        return self.gender
 
-    def isCandidateRetweet(self):
-        return self.candidate_retweet
+    def setAge(self):
+        month = str(random.randint(1, 12))
+        day = str(random.randint(1, 28))
+        year = str(random.randint(1979, 1996))
+        self.birthday = year+'-'+month+'-'+day
 
-    def setUserMentions(self):
-        try:
-            for mentionee in self.tweet_json['entities']['user_mentions']:
-                self.user_mentions.append(mentionee['id_str'])
-        except KeyError:
-            pass
+    def getAge(self):
+        return self.birthday
 
-    def getUserMentions(self):
-        return self.user_mentions
-
-    def setHashtags(self):
-        try:
-            for item in self.tweet_json['entities']['hashtags']:
-                self.hashtags.append(item['text'].lower())
-        except KeyError:
-            pass
-
-    def getHashtags(self):
-        return self.hashtags
+    def setZipcode(self):
+        zips = {    '61701':'Bloomington',
+                    '61702':'Bloomington',
+                    '61704':'Bloomington',
+                    '61705':'Bloomington',
+                    '61709':'Bloomington',
+                    '61710':'Bloomington',
+                    '61791':'Bloomington',
+                    '61799':'Bloomington',
+                    '61761':'Normal',
+                    '61790':'Normal'        }
+        randzip = choice(list(zips.keys()))
+        self.zipcode = randzip
 
     def buildDbRow(self):
        self.db_row = (self.user_id, self.text, self.date, self.retweet_count, self.tweet_id, self.candidate_retweet, self.source_tweet_id)
        return self.db_row
-
-    def setSourceTweet(self):
-        try:
-           self.source_tweet_id = self.tweet_json['retweeted_status']['id_str']
-        except KeyError:
-           self.source_tweet_id = ""
-
-    def getSourceTweet(self):
-        return self.source_tweet_id
