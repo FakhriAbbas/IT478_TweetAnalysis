@@ -39,7 +39,7 @@ class User:
         return randzip
 
     def setCity(self):
-        return zips[self.zipcode]
+        return self.zips[self.zipcode]
 
     def getCity(self):
         return self.city
