@@ -4,14 +4,11 @@ import random
 class Tweet:
     def __init__(self, tweet_json):
         self.tweet_json = tweet_json
-        self.text = ""
-        self.user_id = ""
-        self.tweet_id = ""
-        self.date = ""
-        self.db_row = ""
-        self.gender = ""
-        self.age  ""
-        self.zipcode = 0
+        self.text = self.setText()
+        self.user_id = self.setUser()
+        self.tweet_id = self.setTweetID()
+        self.date = self.setDate()
+        self.retweet_count = self.setRetweetCount()
      
     def getJson(self):
         return self.tweet_json
@@ -53,19 +50,19 @@ class Tweet:
         orig = re.sub('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+','',orig)
         #orig = re.sub('[^a-zA-z\s]+','',orig)
         orig = orig.strip()
-        self.text = orig
+        return orig
 
     def getText(self):
         return self.text
 
     def setUser(self):
-        self.user_id = self.tweet_json['user']['id_str']
+        return self.tweet_json['user']['id_str']
 
     def getUser(self):
         return self.user_id
 
     def setTweetID(self):
-        self.tweet_id = self.tweet_json['id_str']
+        return self.tweet_json['id_str']
 
     def getTweetID(self):
         return self.tweet_id
@@ -91,11 +88,17 @@ class Tweet:
         day = random.randrange(0,28)
         time = orig[3]
 
-        self.date = year+'-'+month+'-'+day+' '+time
+        return year+'-'+month+'-'+day+' '+time
 
     def getDate(self):
         return self.date
 
+    def setRetweetCount(self):
+        return tweets_json['retweet_count']
+    
+    def getRetweetCount(self):
+        return self.retweet_count
+
     def buildDbRow(self):
-       self.db_row = (self.user_id, self.text, self.date, self.retweet_count, self.tweet_id, self.candidate_retweet, self.source_tweet_id)
-       return self.db_row
+       db_row = (self.user_id, self.text, self.date, self.retweet_count, self.tweet_id, "LOADED")
+       return db_row

@@ -1,4 +1,5 @@
 from Tweet import Tweet
+from User import User
 import json
 import os
 import io
@@ -41,17 +42,16 @@ def main():
     cursor = db.makeCursor(conn)
     db.makeTables(cursor)
 
+    users = [User(user) for user in files]
+    for user in users:
+        cursor.execute('insert into sentiment_staging_users (idUser, age, gender, zipcode, city) values (%s,%s,%s,%s,%s)', (user.buildDbRow())
 
-    for user in user_list:
-        with open('collected_tweets/'+user, 'r') as user_file:
-            tweets = json.load(user_file)
-            if len(tweets) == 0:
-                print('skipping user: empty tweets')
-            else:
-                cursor.execute('insert into sentiment_staging_users (idUser, gender, age, zipcode, city) values (%s,%s,%s,%s,%s)', (user, gender, age, rzip[0], rzip[1]))
-                for tweet in tweets:
-                    row = (user, tweet['text'], str('0'), tweet['retweet_count'], tweet['id_str'], 'LOADED' )
-                    cursor.execute('insert into sentiment_staging_tweets (Sentiment_Staging_User_idUser, tweetText, tweetDate, retweetCount, idTweet, status) values (%s, %s, %s, %s, %s)', row)
+    for user in users:
+        with open('collected_tweets/'+user.user_id, 'r') as user_file:
+            tweets_json = json.load(user_file)
+            tweets = [Tweet(tweet) for tweet in tweets_json]
+            for tweet in tweets:
+                cursor.execute('insert into sentiment_staging_tweets (Sentiment_Staging_User_idUser, tweetText, tweetDate, retweetCount, idTweet, status) values (%s, %s, %s, %s, %s, %s)', tweet.buildDbRow())
         
         conn.close()
 main()
