@@ -1,22 +1,19 @@
 import mysql.connector
 from mysql.connector import errorcode
 
-tweets = "create table if not exists tweets (idUser bigint not null, tweetText varchar(140) not null, tweetDate datetime not null, retweetCount smallint not null, idTweet bigint not null primary key, source_tweet_id bigint null, cand_retweet boolean not null, constraint fk_tweets_user foreign key (idUser) references users(idUser))"
+users = "create table users (idUser bigint not null primary key, gender char(1) not null, age datetime not null, zipcode int(5) not null, city varchar(45) not null)"
 
-users = "create table if not exists users (idUser bigint not null primary key)"
+tweets = "create table tweets (idUser bigint not null, tweetText varchar(140) not null, tweetDate datetime not null, retweetCount smallint not null, idTweet bigint not null primary key, sentimentScore double not null, constraint fk_tweets_user foreign key (idUser) references users (idUser))"
 
-hashtags = "create table if not exists hashtags (id int primary key not null auto_increment, text varchar(30))"
+sentiment_staging_users = "create table sentiment_staging_users (idUser bigint not null primary key, gender char(1) not null, age datetime not null, zipcode int(5) not null, city varchar(45) not null, status varchar(45) null)"
 
-tweet_hashtags = "create table if not exists tweet_hashtags (hashtag_id int not null, tweet_id bigint not null, constraint fk_hashtag_id foreign key (hashtag_id) references hashtags(id), constraint fk_tweet_id foreign key (tweet_id) references tweets(idTweet))"
+sentiment_staging_tweets = "create table sentiment_staging_tweets (Sentiment_Staging_User_idUser bigint not null, tweetText varchar(140) not null, tweetDate datetime not null, retweetCount smallint not null, idTweet bigint not null primary key, sentimentScore double null, status varchar(45) null, constraint fk_tweets_staging_user foreign key (Sentiment_Staging_User_idUser) references sentiment_staging_users (idUser))"
 
-candidates = "create table if not exists candidates(id smallint primary key auto_increment, screen_name varchar(14))"
-
-candidate_mentions = "create table if not exists candidate_mentions (user_id bigint not null, candidate_id smallint not null, tweet_id bigint not null, constraint fk_candidate_id foreign key (candidate_id) references candidates(id), constraint fk_candidate_mentions_tweet_id foreign key (tweet_id) references tweets(idTweet))"
-
-user_mentions = "create table if not exists user_mentions (mentioner bigint not null, mentionee bigint not null, tweet_id bigint not null, constraint fk_user_mentioner foreign key (mentioner) references users(idUser), constraint fk_tweet_mentioner foreign key (tweet_id) references tweets(idTweet))"
+user_index = "create index fk_Tweets_User_idx on tweets (idUser asc)"
+staging_user_index = "create index fk_Sentiment_Staging_Tweets_Sentiment_Staging_User1_idx on sentiment_staging_tweets (Sentiment_Staging_User_idUser asc)"
 
 def makeConnection():
-    conn = mysql.connector.connect(user='twitter', password='politics', host='localhost', database='twitter')
+    conn = mysql.connector.connect(user='it478', password='tweets', host='localhost', database='it478')
     return conn
 
 def makeCursor(conn):
@@ -29,16 +26,10 @@ def closeConn(conn):
 def makeTables(cursor):
     cursor.execute(users)
     cursor.execute(tweets)
-    cursor.execute(hashtags)
-    cursor.execute(tweet_hashtags)
-    cursor.execute(user_mentions)
-
-def getHashtags(cursor):
-    hashtags = []
-    cursor.execute("select id, text from hashtags")
-    for result in cursor:
-        hashtags.append(result)
-    return hashtags
+    cursor.execute(sentiment_staging_users)
+    cursor.execute(sentiment_staging_tweets)
+    cursor.execute(user_index)
+    cursor.execute(staging_user_index)
 
 def getUsers(cursor):
     users = []
