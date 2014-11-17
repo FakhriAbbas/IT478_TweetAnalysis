@@ -41,7 +41,9 @@ def main():
     conn = db.makeConnection()
     cursor = db.makeCursor(conn)
     db.makeTables(cursor)
-
+    
+    # log errors and continue
+    f = open('errors.log','w')
     users = [User(user) for user in files]
 
     for user in users:
@@ -52,8 +54,13 @@ def main():
             tweets_json = json.load(user_file)
             tweets = [Tweet(tweet) for tweet in tweets_json]
             for tweet in tweets:
-                cursor.execute('insert into sentiment_staging_tweets (Sentiment_Staging_User_idUser, tweetText, tweetDate, retweetCount, idTweet, status) values (%s, %s, %s, %s, %s, %s)', tweet.buildDbRow())
+                row = tweet.buildDbRow()
+                try:
+                    cursor.execute('insert into sentiment_staging_tweets (Sentiment_Staging_User_idUser, tweetText, tweetDate, retweetCount, idTweet, status) values (%s, %s, %s, %s, %s, %s)', row)
+                except:
+                    f.write("Error at: " + str(row))
         conn.commit()
 
     conn.close()
+    f.close()
 main()
