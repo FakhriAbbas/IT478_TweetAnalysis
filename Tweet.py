@@ -9,6 +9,7 @@ class Tweet:
         self.tweet_id = self.setTweetID()
         self.date = self.setDate()
         self.retweet_count = self.setRetweetCount()
+        self.lang = self.setLang()
      
     def getJson(self):
         return self.tweet_json
@@ -102,3 +103,6 @@ class Tweet:
     def buildDbRow(self):
        db_row = (self.user_id, self.text, self.date, self.retweet_count, self.tweet_id, "LOADED")
        return db_row
+
+   def setLang(self):
+       return self.tweet_json['lang']

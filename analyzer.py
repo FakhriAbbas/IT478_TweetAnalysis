@@ -15,22 +15,7 @@ def getFileList(directory):
     return files
 
 def processUser(uncomp_json):
-    tweets = []
-    for line in uncomp_json:
-        tweet = json.loads(str(line, 'utf-8'))
-
-        new_tweet = Tweet(tweet)
-        new_tweet.setText()
-        new_tweet.setUser()
-        new_tweet.setTweetID()
-        new_tweet.setDate()
-        new_tweet.setCandidateRetweet()
-        new_tweet.setUserMentions()
-        new_tweet.setHashtags()
-        new_tweet.setSourceTweet()
-
-        tweets.append(new_tweet)
-
+    tweets = [Tweet(json.loads(str(line, 'utf-8'))) for line in uncomp_json]
     return tweets
 
 def main():
@@ -56,7 +41,8 @@ def main():
             for tweet in tweets:
                 row = tweet.buildDbRow()
                 try:
-                    cursor.execute('insert into sentiment_staging_tweets (Sentiment_Staging_User_idUser, tweetText, tweetDate, retweetCount, idTweet, status) values (%s, %s, %s, %s, %s, %s)', row)
+                    if tweet.lang = "en" and tweet.text != "":
+                        cursor.execute('insert into sentiment_staging_tweets (Sentiment_Staging_User_idUser, tweetText, tweetDate, retweetCount, idTweet, status) values (%s, %s, %s, %s, %s, %s)', row)
                 except:
                     f.write("Error at: " + str(row))
         conn.commit()
