@@ -49,7 +49,7 @@ class Tweet:
             #orig = re.sub('[^a-zA-Z]+','', orig)
 
         orig = re.sub('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+','',orig)
-        #orig = re.sub('[^a-zA-z\s]+','',orig)
+        orig = re.sub('[^\x00-\x7F]+','',orig)
         orig = orig.strip()
         return orig
 
@@ -85,7 +85,7 @@ class Tweet:
         orig = self.tweet_json['created_at'].split(' ')
         
         month = random.choice(months)
-        year = orig[5]
+        year = "2014"
         day = str(random.randrange(0,28))
         time = orig[3]
 
@@ -104,5 +104,5 @@ class Tweet:
        db_row = (self.user_id, self.text, self.date, self.retweet_count, self.tweet_id, "LOADED")
        return db_row
 
-   def setLang(self):
+    def setLang(self):
        return self.tweet_json['lang']

@@ -41,7 +41,7 @@ def main():
             for tweet in tweets:
                 row = tweet.buildDbRow()
                 try:
-                    if tweet.lang = "en" and tweet.text != "":
+                    if tweet.lang == "en" and tweet.text != "":
                         cursor.execute('insert into sentiment_staging_tweets (Sentiment_Staging_User_idUser, tweetText, tweetDate, retweetCount, idTweet, status) values (%s, %s, %s, %s, %s, %s)', row)
                 except:
                     f.write("Error at: " + str(row))
